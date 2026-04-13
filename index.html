@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Juego de amor 💖</title>
+
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    font-family: Arial;
+    color: white;
+    text-align: center;
+  }
+
+  button {
+    padding: 12px 25px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #inicio, #fin {
+    position: absolute;
+    width: 100%;
+    top: 40%;
+  }
+
+  #fin {
+    display: none;
+  }
+
+  #player {
+    position: absolute;
+    bottom: 20px;
+    font-size: 30px;
+    display: none;
+  }
+
+  .enemigo {
+    position: absolute;
+    font-size: 25px;
+  }
+
+  #vidas, #tiempo {
+    position: absolute;
+    width: 100%;
+    top: 20px;
+    display: none;
+  }
+
+  #tiempo {
+    top: 50px;
+  }
+</style>
+
+</head>
+<body>
+
+<!-- INICIO -->
+<div id="inicio">
+  <h1>💖 Fátima 💖</h1>
+  <p>Evita los corazones rotos 😢</p>
+  <button onclick="iniciar()">Jugar 💕</button>
+</div>
+
+<!-- HUD -->
+<div id="vidas">Vidas: ❤️❤️❤️</div>
+<div id="tiempo">Tiempo: 35</div>
+
+<!-- JUGADOR -->
+<div id="player">😁</div>
+
+<!-- FINAL -->
+<div id="fin">
+  <h2 id="resultado"></h2>
+  <button onclick="reiniciar()">Reintentar 🔄</button>
+</div>
+
+<script>
+let player = document.getElementById("player");
+let vidasEl = document.getElementById("vidas");
+let tiempoEl = document.getElementById("tiempo");
+let fin = document.getElementById("fin");
+let resultado = document.getElementById("resultado");
+
+let vidas, tiempo, jugando, velocidad;
+
+function iniciar() {
+  document.getElementById("inicio").style.display = "none";
+
+  player.style.display = "block";
+  vidasEl.style.display = "block";
+  tiempoEl.style.display = "block";
+
+  vidas = 3;
+  tiempo = 35;
+  velocidad = 3;
+  jugando = true;
+
+  actualizarVidas();
+  loopTiempo();
+}
+
+// mover
+document.addEventListener("mousemove", e => {
+  player.style.left = e.clientX + "px";
+});
+document.addEventListener("touchmove", e => {
+  player.style.left = e.touches[0].clientX + "px";
+});
+
+// vidas
+function actualizarVidas() {
+  vidasEl.innerText = "Vidas: " + "❤️".repeat(vidas);
+}
+
+// enemigos
+setInterval(() => {
+  if(!jugando) return;
+
+  let enemigo = document.createElement("div");
+  enemigo.innerHTML = "💔";
+  enemigo.className = "enemigo";
+
+  enemigo.style.left = Math.random()*window.innerWidth + "px";
+  enemigo.style.top = "-30px";
+
+  document.body.appendChild(enemigo);
+
+  let vel = velocidad;
+
+  let mover = setInterval(()=>{
+    enemigo.style.top = (parseFloat(enemigo.style.top)+vel)+"px";
+
+    let p = player.getBoundingClientRect();
+    let e = enemigo.getBoundingClientRect();
+
+    if(
+      p.left < e.right &&
+      p.right > e.left &&
+      p.top < e.bottom &&
+      p.bottom > e.top
+    ){
+      enemigo.remove();
+      clearInterval(mover);
+
+      vidas--;
+      actualizarVidas();
+
+      if(vidas<=0){
+        terminar(false);
+      }
+    }
+
+    if(parseFloat(enemigo.style.top) > window.innerHeight){
+      enemigo.remove();
+      clearInterval(mover);
+    }
+
+  },20);
+
+},600);
+
+// tiempo + dificultad
+function loopTiempo() {
+  let intervalo = setInterval(() => {
+    if(!jugando){
+      clearInterval(intervalo);
+      return;
+    }
+
+    tiempo--;
+    tiempoEl.innerText = "Tiempo: " + tiempo;
+
+    // subir dificultad
+    if(tiempo % 5 === 0){
+      velocidad += 1;
+    }
+
+    if(tiempo <= 0){
+      terminar(true);
+    }
+
+  },1000);
+}
+
+// terminar
+function terminar(gano) {
+  jugando = false;
+
+  player.style.display = "none";
+  vidasEl.style.display = "none";
+  tiempoEl.style.display = "none";
+
+  fin.style.display = "block";
+
+  if(gano){
+    resultado.innerText = "💖 Ganaste 😍 Juan ama muchísimo a Fátima ❤️";
+  } else {
+    resultado.innerText = "💔 Perdiste 😢 pero Juan te ama mucho ❤️";
+  }
+}
+
+// reiniciar
+function reiniciar() {
+  location.reload();
+}
+</script>
+
+</body>
+</html>
