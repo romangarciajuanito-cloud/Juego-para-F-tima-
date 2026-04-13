@@ -2,55 +2,73 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Juego de amor 💖</title>
 
 <style>
   body {
     margin: 0;
+    height: 100vh;
     overflow: hidden;
     background: linear-gradient(135deg, #ff4e70, #ff9a9e);
     font-family: Arial;
     color: white;
-    text-align: center;
   }
 
   .pantalla {
     position: absolute;
     width: 100%;
-    top: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  p {
+    font-size: 18px;
+    margin: 5px 0;
   }
 
   button {
-    padding: 12px 25px;
-    font-size: 18px;
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
+    background: white;
+    color: #ff4e70;
     cursor: pointer;
   }
 
   #player {
     position: absolute;
     bottom: 20px;
-    font-size: 30px;
+    font-size: 35px;
     display: none;
   }
 
   .enemigo {
     position: absolute;
-    font-size: 25px;
+    font-size: 28px;
   }
 
   #vidas, #tiempo {
     position: absolute;
     width: 100%;
-    top: 10px;
+    text-align: center;
     font-size: 20px;
     display: none;
   }
 
-  #tiempo {
-    top: 35px;
-  }
+  #vidas { top: 10px; }
+  #tiempo { top: 40px; }
 
   #fin {
     display: none;
@@ -60,22 +78,22 @@
 </head>
 <body>
 
-<!-- PRESENTACIÓN -->
+<!-- INICIO -->
 <div id="inicio" class="pantalla">
   <h1>💖 Fátima 💖</h1>
   <p>🎮 Cómo jugar:</p>
   <p>👉 Mueve la carita 😁</p>
-  <p>👉 Evita los corazones rotos 💔</p>
+  <p>👉 Evita los 💔</p>
   <p>👉 Tienes 3 vidas ❤️</p>
-  <p>👉 Sobrevive 35 segundos para ganar 💖</p>
-  <button onclick="iniciar()">Iniciar 💕</button>
+  <p>👉 Sobrevive 35 segundos</p>
+  <button onclick="iniciar()">Jugar 💕</button>
 </div>
 
 <!-- HUD -->
 <div id="vidas">Vidas: ❤️❤️❤️</div>
 <div id="tiempo">Tiempo: 35</div>
 
-<!-- JUGADOR -->
+<!-- PLAYER -->
 <div id="player">😁</div>
 
 <!-- FINAL -->
@@ -110,13 +128,13 @@ function iniciar() {
   loopTiempo();
 }
 
-// mover jugador
-document.addEventListener("mousemove", e => {
-  if(jugando) player.style.left = e.clientX + "px";
-});
-
+// mover
 document.addEventListener("touchmove", e => {
   if(jugando) player.style.left = e.touches[0].clientX + "px";
+});
+
+document.addEventListener("mousemove", e => {
+  if(jugando) player.style.left = e.clientX + "px";
 });
 
 // vidas
@@ -201,7 +219,7 @@ function terminar(gano) {
   vidasEl.style.display = "none";
   tiempoEl.style.display = "none";
 
-  finPantalla.style.display = "block";
+  finPantalla.style.display = "flex";
 
   if(gano){
     resultado.innerText = "💖 Ganaste 😍 Juan ama muchísimo a Fátima ❤️";
