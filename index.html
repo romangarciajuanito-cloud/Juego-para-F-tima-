@@ -8,10 +8,16 @@
   body {
     margin: 0;
     overflow: hidden;
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    background: linear-gradient(135deg, #ff4e70, #ff9a9e);
     font-family: Arial;
     color: white;
     text-align: center;
+  }
+
+  .pantalla {
+    position: absolute;
+    width: 100%;
+    top: 30%;
   }
 
   button {
@@ -20,16 +26,6 @@
     border: none;
     border-radius: 10px;
     cursor: pointer;
-  }
-
-  #inicio, #fin {
-    position: absolute;
-    width: 100%;
-    top: 40%;
-  }
-
-  #fin {
-    display: none;
   }
 
   #player {
@@ -47,23 +43,32 @@
   #vidas, #tiempo {
     position: absolute;
     width: 100%;
-    top: 20px;
+    top: 10px;
+    font-size: 20px;
     display: none;
   }
 
   #tiempo {
-    top: 50px;
+    top: 35px;
+  }
+
+  #fin {
+    display: none;
   }
 </style>
 
 </head>
 <body>
 
-<!-- INICIO -->
-<div id="inicio">
+<!-- PRESENTACIÓN -->
+<div id="inicio" class="pantalla">
   <h1>💖 Fátima 💖</h1>
-  <p>Evita los corazones rotos 😢</p>
-  <button onclick="iniciar()">Jugar 💕</button>
+  <p>🎮 Cómo jugar:</p>
+  <p>👉 Mueve la carita 😁</p>
+  <p>👉 Evita los corazones rotos 💔</p>
+  <p>👉 Tienes 3 vidas ❤️</p>
+  <p>👉 Sobrevive 35 segundos para ganar 💖</p>
+  <button onclick="iniciar()">Iniciar 💕</button>
 </div>
 
 <!-- HUD -->
@@ -74,7 +79,7 @@
 <div id="player">😁</div>
 
 <!-- FINAL -->
-<div id="fin">
+<div id="fin" class="pantalla">
   <h2 id="resultado"></h2>
   <button onclick="reiniciar()">Reintentar 🔄</button>
 </div>
@@ -83,13 +88,14 @@
 let player = document.getElementById("player");
 let vidasEl = document.getElementById("vidas");
 let tiempoEl = document.getElementById("tiempo");
-let fin = document.getElementById("fin");
+let inicioPantalla = document.getElementById("inicio");
+let finPantalla = document.getElementById("fin");
 let resultado = document.getElementById("resultado");
 
 let vidas, tiempo, jugando, velocidad;
 
 function iniciar() {
-  document.getElementById("inicio").style.display = "none";
+  inicioPantalla.style.display = "none";
 
   player.style.display = "block";
   vidasEl.style.display = "block";
@@ -104,12 +110,13 @@ function iniciar() {
   loopTiempo();
 }
 
-// mover
+// mover jugador
 document.addEventListener("mousemove", e => {
-  player.style.left = e.clientX + "px";
+  if(jugando) player.style.left = e.clientX + "px";
 });
+
 document.addEventListener("touchmove", e => {
-  player.style.left = e.touches[0].clientX + "px";
+  if(jugando) player.style.left = e.touches[0].clientX + "px";
 });
 
 // vidas
@@ -175,7 +182,6 @@ function loopTiempo() {
     tiempo--;
     tiempoEl.innerText = "Tiempo: " + tiempo;
 
-    // subir dificultad
     if(tiempo % 5 === 0){
       velocidad += 1;
     }
@@ -195,7 +201,7 @@ function terminar(gano) {
   vidasEl.style.display = "none";
   tiempoEl.style.display = "none";
 
-  fin.style.display = "block";
+  finPantalla.style.display = "block";
 
   if(gano){
     resultado.innerText = "💖 Ganaste 😍 Juan ama muchísimo a Fátima ❤️";
